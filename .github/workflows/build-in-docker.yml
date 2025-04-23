@@ -19,7 +19,7 @@ jobs:
         docker-compose build
         docker-compose up && tar cvf artifact.tar.gz dist/
     - name: Save build result at artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4.6.2
       with:
         name: artifact.tar.gz
         path: |
