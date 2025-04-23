@@ -1,10 +1,10 @@
 [Global]
-IconName=accessories-text-editor # Use the same icon as your .desktop file or your custom app icon
+IconName=accessories-text-editor
 Name=Knowbridge
+Comment=A brief description of the application
+DesktopEntry=knowbridge
 
-# Define the specific event(s) your application sends
-# The part after 'Event/' must match the event ID used in KNotification() constructor
-[Event/knowbridge-event]
-Name=Text Modification Status
-Comment=Notifications about text processing results (success, errors) from Knowbridge.
+[Event/knowbridge]
+Name=Knowbridge
+Comment=KnowbridgeEvent
 Action=Popup

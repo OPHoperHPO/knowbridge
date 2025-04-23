@@ -56,3 +56,6 @@ compile_commands.json
 *_qmlcache.qrc
 tools/src.txt
 cmake-build-*
+po/*.pot
+po/*/*.mo
+

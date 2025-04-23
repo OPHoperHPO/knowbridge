@@ -1,7 +1,7 @@
 # --- File: CMakeLists.txt ---
 cmake_minimum_required(VERSION 3.20) # As recommended for KF6
 
-project(Knowbridge LANGUAGES CXX)
+project(knowbridge LANGUAGES CXX)
 
 # --- Version Settings ---
 set(QT_MIN_VERSION "6.6.0") # KF6 generally requires Qt 6.6+
@@ -43,6 +43,9 @@ find_package(KF6 ${KF_MIN_VERSION} REQUIRED COMPONENTS
         XmlGui          # KActionCollection, KXMLGUIFactory
         Notifications
 )
+
+find_package(KF6Config ${KF_MIN_VERSION} CONFIG REQUIRED)
+find_package(KF6ConfigWidgets ${KF_MIN_VERSION} CONFIG REQUIRED)
 
 if(TARGET KF6::Notifications)
     add_definitions(-DHAVE_KNOTIFICATIONS)
@@ -111,18 +114,21 @@ if(ATSPI_FOUND)
 endif()
 
 # --- Define the executable ---
-add_executable(Knowbridge) # Sources added below
+add_executable(knowbridge) # Sources added below
 
 # --- Specify Sources ---
-target_sources(Knowbridge PRIVATE
+target_sources(knowbridge PRIVATE
         src/main.cpp
         src/ApiClient.cpp
         src/BackgroundProcessor.cpp
         src/AccessibilityHelper.cpp
-        # Headers generally not needed unless MOC/UIC/RCC
-        src/TextAction.h
+        src/ConfigManager.cpp          # NEW
+        src/SettingsDialog.cpp         # NEW
         src/AccessibilityHelper.h
-)
+        src/ConfigManager.h            # NEW
+        src/ActionEditorDialog.cpp
+        src/ActionEditorDialog.h
+        src/SettingsDialog.h)          # NEW
 
 # --- Link Libraries ---
 # Use the modern Namespace::Component syntax
@@ -140,6 +146,10 @@ set(KDEOpenAI_LINK_LIBS
         KF6::I18n
         KF6::XmlGui
 
+        KF6::ConfigCore
+        KF6::ConfigGui
+        KF6::ConfigWidgets
+
         # Conditional KF6 Libs
         $<$<BOOL:${KF6_Notifications_FOUND}>:KF6::Notifications>
 
@@ -151,16 +161,23 @@ set(KDEOpenAI_LINK_LIBS
         $<$<BOOL:${ATSPI_FOUND}>:PkgConfig::GLIB>    # <-- ADDED Link GLib
 )
 
+# --- tranlations ---------------------------------------------------------------
+add_subdirectory(po)
+add_dependencies(update-po knowbridge)   # run xgettext/msgmerge after the exe
+ki18n_install(po)
 
 # --- Link Libraries to Target ---
-target_link_libraries(Knowbridge PRIVATE ${KDEOpenAI_LINK_LIBS})
+target_link_libraries(knowbridge PRIVATE ${KDEOpenAI_LINK_LIBS})
+
+
 
 # --- Installation ---
-install(TARGETS Knowbridge ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+
+install(TARGETS knowbridge ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 configure_file(assets/knowbridge.desktop.cmake
-        ${CMAKE_CURRENT_BINARY_DIR}/kdeopenaitextmodifier.desktop @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/kdeopenaitextmodifier.desktop
+        ${CMAKE_CURRENT_BINARY_DIR}/knowbridge.desktop @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/knowbridge.desktop
         DESTINATION ${KDE_INSTALL_DESKTOPDIR})
 
 if(DEFINED KDE_INSTALL_KNOTIFYRCDIR)

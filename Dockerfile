@@ -32,6 +32,7 @@ WORKDIR /app
 COPY CMakeLists.txt ./
 COPY assets ./assets
 COPY src ./src
+COPY po ./po
 
 
 # Configure and build the application

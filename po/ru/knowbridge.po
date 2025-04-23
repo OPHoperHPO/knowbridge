@@ -1,0 +1,250 @@
+# Russian translation for knowbridge.
+# Copyright (C) 2025 THE knowbridge'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the knowbridge package.
+# Automatically generated, fill in translations manually.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: knowbridge 2.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-04-24 00:00+0000\n"
+"PO-Revision-Date: 2025-04-24 00:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Russian\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: ChatGPT\n"
+
+#: ../src/ActionEditorDialog.cpp:18 ../src/SettingsDialog.cpp:106
+msgid "Name:"
+msgstr "Название:"
+
+#: ../src/ActionEditorDialog.cpp:19
+msgid "Prompt:"
+msgstr "Промпт:" # Or "Запрос:", but "Промпт" is common in AI context
+
+#: ../src/ActionEditorDialog.cpp:13
+msgctxt "@title:window"
+msgid "Custom Action"
+msgstr "Пользовательское действие"
+
+#: ../src/ApiClient.cpp:32
+msgid "API key is not set."
+msgstr "Ключ API не установлен."
+
+#: ../src/ApiClient.cpp:69
+#, qt-format
+msgid "Network error: %1"
+msgstr "Сетевая ошибка: %1"
+
+#: ../src/ApiClient.cpp:75
+msgid "Malformed JSON in reply."
+msgstr "Некорректный JSON в ответе."
+
+#: ../src/ApiClient.cpp:81
+msgid "No choices in reply."
+msgstr "Нет вариантов в ответе."
+
+#: ../src/ApiClient.cpp:88
+msgid "Empty content in reply."
+msgstr "Пустое содержимое в ответе."
+
+#: ../src/BackgroundProcessor.cpp:92
+msgid "Nothing to process"
+msgstr "Нечего обрабатывать"
+
+#: ../src/BackgroundProcessor.cpp:93
+msgid "No text was found in focus or clipboard."
+msgstr "Текст не найден в фокусе или буфере обмена."
+
+#: ../src/BackgroundProcessor.cpp:109
+msgid "Processing…"
+msgstr "Обработка…"
+
+#: ../src/BackgroundProcessor.cpp:122
+msgid "Done"
+msgstr "Готово"
+
+#: ../src/BackgroundProcessor.cpp:122
+msgid "Text was replaced."
+msgstr "Текст был заменён."
+
+#: ../src/BackgroundProcessor.cpp:126
+msgid "Inserted into clipboard."
+msgstr "Вставлено в буфер обмена." # Used as 'why' argument
+
+#: ../src/BackgroundProcessor.cpp:133 ../src/SettingsDialog.cpp:147
+msgid "Error"
+msgstr "Ошибка"
+
+#: ../src/BackgroundProcessor.cpp:140
+msgid "Result copied"
+msgstr "Результат скопирован"
+
+#: ../src/main.cpp:24 ../assets/knowbridge.desktop.cmake:2 ../assets/knowbridge.notifyrc:3 ../assets/knowbridge.notifyrc:7
+msgid "Knowbridge"
+msgstr "Knowbridge" # Proper name, usually not translated
+
+#: ../src/main.cpp:26
+msgid "Modify text with an LLM via a global shortcut."
+msgstr "Изменяйте текст с помощью LLM через глобальную комбинацию клавиш."
+
+#: ../src/main.cpp:34 ../src/SettingsDialog.cpp:17
+msgctxt "@title:window"
+msgid "Settings"
+msgstr "Настройки"
+
+#: ../src/main.cpp:34
+msgid "Settings…"
+msgstr "Настройки…"
+
+#: ../src/main.cpp:36
+msgid "Quit"
+msgstr "Выход"
+
+#: ../src/main.cpp:47
+msgid "Modify Text (AI)"
+msgstr "Изменить текст (ИИ)"
+
+#: ../src/SettingsDialog.cpp:47 ../src/SettingsDialog.cpp:197
+msgid "Test…"
+msgstr "Проверить…"
+
+#: ../src/SettingsDialog.cpp:56
+msgid "API key:"
+msgstr "Ключ API:"
+
+#: ../src/SettingsDialog.cpp:57
+msgid "API endpoint:"
+msgstr "Адрес API:"
+
+#: ../src/SettingsDialog.cpp:60
+msgid "Model:"
+msgstr "Модель:"
+
+#: ../src/SettingsDialog.cpp:64
+msgid "System prompt:"
+msgstr "Системный промпт:" # Or "Системный запрос:"
+
+#: ../src/SettingsDialog.cpp:68
+msgid "General"
+msgstr "Общие" # Tab title
+
+#: ../src/SettingsDialog.cpp:77 ../src/SettingsDialog.cpp:151
+msgid "Add…"
+msgstr "Добавить…"
+
+#: ../src/SettingsDialog.cpp:78 ../src/SettingsDialog.cpp:161
+msgid "Edit…"
+msgstr "Изменить…"
+
+#: ../src/SettingsDialog.cpp:79 ../src/SettingsDialog.cpp:174
+msgid "Remove"
+msgstr "Удалить"
+
+#: ../src/SettingsDialog.cpp:80 ../src/SettingsDialog.cpp:182
+msgid "Up"
+msgstr "Вверх"
+
+#: ../src/SettingsDialog.cpp:81 ../src/SettingsDialog.cpp:183
+msgid "Down"
+msgstr "Вниз"
+
+#: ../src/SettingsDialog.cpp:101
+msgid "Actions"
+msgstr "Действия" # Tab title
+
+#: ../src/SettingsDialog.cpp:118
+msgid "Endpoint looks invalid."
+msgstr "Адрес API выглядит неверным."
+
+#: ../src/SettingsDialog.cpp:200
+msgid "Missing key"
+msgstr "Отсутствует ключ" # MessageBox title
+
+#: ../src/SettingsDialog.cpp:201
+msgid "Enter an API key first."
+msgstr "Сначала введите ключ API." # MessageBox text
+
+#: ../src/SettingsDialog.cpp:209 ../src/SettingsDialog.cpp:214
+msgid "Test result"
+msgstr "Результат проверки" # MessageBox title
+
+#: ../src/SettingsDialog.cpp:210
+#, qt-format
+msgid "API key is valid. Result:\n%1"
+msgstr "Ключ API действителен. Результат:\n%1" # MessageBox text
+
+#: ../src/SettingsDialog.cpp:215
+#, qt-format
+msgid "API key is invalid.\n%1"
+msgstr "Ключ API недействителен.\n%1" # MessageBox text
+
+#: ../assets/knowbridge.desktop.cmake:3
+msgid "Modify selected text using OpenAI via global shortcut"
+msgstr "Изменение выделенного текста с помощью OpenAI через глобальную комбинацию клавиш"
+
+#: ../assets/knowbridge.desktop.cmake:9
+msgid "text,ai,openai,modify,grammar,style,shortcut"
+msgstr "текст,ии,openai,изменить,грамматика,стиль,сочетание клавиш,горячая клавиша,llm" # Translated keywords
+
+#: ../assets/knowbridge.notifyrc:4
+msgid "A brief description of the application"
+msgstr "Краткое описание приложения"
+
+#: ../assets/knowbridge.notifyrc:8
+msgid "KnowbridgeEvent"
+msgstr "Событие Knowbridge"
+
+#~ msgid "Replace text"
+#~ msgstr "Заменить текст"
+
+#~ msgid "Copy text"
+#~ msgstr "Копировать текст"
+
+#~ msgid "The operation failed: %1"
+#~ msgstr "Операция не удалась: %1"
+
+#~ msgid "Failed to interact with the focused element."
+#~ msgstr "Не удалось взаимодействовать с элементом в фокусе."
+
+#~ msgid "Could not get selected text or focus. Using clipboard."
+#~ msgstr "Не удалось получить выделенный текст или фокус. Используется буфер обмена."
+
+#~ msgid "Result copied to clipboard."
+#~ msgstr "Результат скопирован в буфер обмена."
+
+#~ msgid "Settings saved."
+#~ msgstr "Настройки сохранены."
+
+#: ../src/ConfigManager.cpp:XX
+msgid "Fix Grammar"
+msgstr "Исправить грамматику"
+
+#: ../src/ConfigManager.cpp:XX
+msgid "Correct typos, punctuation, grammar and capitalization."
+msgstr "Исправьте опечатки, пунктуацию, грамматику и использование заглавных букв."
+
+#: ../src/ConfigManager.cpp:XX
+msgid "Improve Style"
+msgstr "Улучшить стиль"
+
+#: ../src/ConfigManager.cpp:XX
+msgid "Improve clarity, word choice and readability."
+msgstr "Улучшите ясность, подбор слов и читаемость."
+
+#: ../src/ConfigManager.cpp:XX
+msgid "Simplify Text"
+msgstr "Упростить текст"
+
+#: ../src/ConfigManager.cpp:XX
+msgid "Rewrite in plain language suitable for a 6-grade student."
+msgstr "Перепишите простым языком, понятным ученику 6 класса."
+
+#: ../src/ConfigManager.cpp:XX
+msgid "You are an AI text editor. Strictly follow the instructions. Return ONLY the modified text—no explanations, pre-/post-amble."
+msgstr "Вы — ИИ-редактор текста. Строго следуйте инструкциям. Возвращайте ТОЛЬКО изменённый текст — без объяснений, вступлений или заключений."

@@ -1,61 +1,52 @@
-// --- File: src/BackgroundProcessor.h ---
-#ifndef BACKGROUNDPROCESSOR_H
-#define BACKGROUNDPROCESSOR_H
-
+#pragma once
 #include <QObject>
 #include <QString>
+#include <QClipboard>
+#include <QMenu>
 
-class QClipboard;
-class QMenu;
-class QAction;
-
+#include "AccessibilityHelper.h"
+#include "ConfigManager.h"
 #include "ApiClient.h"
-#include "TextAction.h"
-#include "AccessibilityHelper.h" // ADD
 
-// REMOVE X11 Window type
-// typedef unsigned long Window;
-
+/**
+ *  Управляет жизненным циклом операции:
+ *  1. Читает выделенный/клипборд-текст.
+ *  2. Показывает меню с пользовательскими действиями.
+ *  3. Отправляет запрос в ApiClient, показывает прогресс.
+ *  4. Вставляет результат через AT-SPI или падает в буфер обмена.
+ */
 class BackgroundProcessor : public QObject
 {
 Q_OBJECT
-
 public:
-    explicit BackgroundProcessor(QObject *parent = nullptr);
+    explicit BackgroundProcessor(ConfigManager* cfg,
+                                 QObject* parent = nullptr);
     ~BackgroundProcessor() override;
 
     Q_INVOKABLE void onShortcutActivated();
 
 private Q_SLOTS:
-    // Renamed internal step
-    void showMenuAndPrepare();
-    void onActionSelected(QAction *action);
-    void handleApiResult(const QString &resultText);
-    void handleApiError(const QString &errorMsg);
-    // Slot to perform initialization after event loop starts
-    void initialize();
+    void initialize();                  // отложенный старт
+    void onActionSelected(QAction* act);
 
+    void handleResult(const QString& text);
+    void handleError (const QString& err);
 
 private:
     void setupApiClient();
     void createActionMenu();
-    void showNotification(const QString &title, const QString &text, bool isError = false);
-    // Fallback method
-    void fallbackToClipboard(const QString& text, const QString& reason);
+    void notify(const QString& title,
+                const QString& text,
+                bool error = false);
+    void clipboardFallback(const QString& text,
+                           const QString& why);
 
-    ApiClient *m_apiClient = nullptr;
-    QClipboard *m_clipboard;
-    QMenu *m_actionMenu;
-    QString m_apiKey;
-
-    // Replace X11Helper with AccessibilityHelper
-    AccessibilityHelper m_accessibilityHelper;
-    // Store info about the element targeted by the shortcut activation
-    ElementInfo m_currentTargetInfo;
-
-    // Store the specific action requested for the current operation
-    TextAction m_currentAction;
-
+    bool               m_processing{false}; // <- добавлено
+    ConfigManager*      m_cfg;
+    ApiClient*          m_api{nullptr};
+    QClipboard*         m_clip;
+    QMenu*              m_menu;
+    AccessibilityHelper m_a11y;
+    ElementInfo         m_target;
+    QString             m_currentPrompt;
 };
-
-#endif // BACKGROUNDPROCESSOR_H

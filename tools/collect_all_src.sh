@@ -1,14 +1,34 @@
-# Create or overwrite the output file
-> src.txt
+#!/bin/bash
 
-# Loop through all the files and patterns provided
-for file in ../CMakeLists.txt ../docker-compose.yml ../Dockerfile ../assets/* ../src/*; do
-  # Check if it's actually a file (and not a directory or non-existent)
-  if [ -f "$file" ]; then
-    echo "--- File: $file ---" >> src.txt # Print the header with the relative path
-    cat "$file" >> src.txt             # Append the file content
-    echo "" >> src.txt                 # Add a blank line for separation (optional)
-  fi
+# Output file
+output="src.txt"
+
+# Create or clear the output file
+: > "$output"
+
+# Enable recursive globbing (for ** to work)
+shopt -s globstar nullglob
+
+# List of file patterns to process
+file_patterns=(
+  "../CMakeLists.txt"
+  "../docker-compose.yml"
+  "../Dockerfile"
+  "../assets/*"
+  "../src/*"
+  "../po/**/*"
+)
+
+# Iterate over each pattern
+for pattern in "${file_patterns[@]}"; do
+  # Expand pattern and loop through each resulting file
+  for file in $pattern; do
+    if [ -f "$file" ]; then
+      echo "--- File: $file ---" >> "$output"
+      cat "$file" >> "$output"
+      echo -e "\n" >> "$output"
+    fi
+  done
 done
 
-echo "Content aggregated into src.txt"
+echo "Content aggregated into $output"
