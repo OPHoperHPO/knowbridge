@@ -6,4 +6,5 @@ services:
     build: .
     volumes:
       - ./dist:/dist
-    command: cp -r /app/install/* /dist/ && chown -R 1000:1000 /dist
+    entrypoint: ["/bin/bash", "-c"]
+    command: ["cp -r /app/install/* /dist/ && chown -R 1000:1000 /dist"]

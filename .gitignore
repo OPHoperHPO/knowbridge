@@ -10,6 +10,8 @@
 *.dll
 *.dylib
 
+.idea
+
 # Qt-es
 object_script.*.Release
 object_script.*.Debug
@@ -52,3 +54,5 @@ compile_commands.json
 *creator.user*
 
 *_qmlcache.qrc
+tools/src.txt
+cmake-build-*

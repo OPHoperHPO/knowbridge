@@ -158,14 +158,14 @@ target_link_libraries(Knowbridge PRIVATE ${KDEOpenAI_LINK_LIBS})
 # --- Installation ---
 install(TARGETS Knowbridge ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
-configure_file(knowbridge.desktop.cmake
+configure_file(assets/knowbridge.desktop.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/kdeopenaitextmodifier.desktop @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/kdeopenaitextmodifier.desktop
         DESTINATION ${KDE_INSTALL_DESKTOPDIR})
 
 if(DEFINED KDE_INSTALL_KNOTIFYRCDIR)
     message(STATUS "Installing notifyrc to ${KDE_INSTALL_KNOTIFYRCDIR}")
-    install(FILES knowbridge.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFYRCDIR})
+    install(FILES assets/knowbridge.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFYRCDIR})
 else()
     message(WARNING "KDE_INSTALL_KNOTIFYRCDIR is not defined. Skipping installation of notifyrc file.")
 endif()
