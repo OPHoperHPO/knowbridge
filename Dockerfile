@@ -1,6 +1,6 @@
 # --- File: ../Dockerfile ---
 # Stage 1: Builder
-FROM manjarolinux/base:latest AS builder
+FROM archlinux:base-devel AS builder
 
 LABEL maintainer="Nikita Selin <farvard34@gmail.com>"
 
