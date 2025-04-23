@@ -25,7 +25,6 @@
 </p>
 
 <hr>
----
 
 ## 🌟 Key Features
 
