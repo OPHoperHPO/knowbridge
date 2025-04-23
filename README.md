@@ -46,7 +46,12 @@ Knowbridge is a **KDE Plasma 6** tool that lets you leverage Large Language Mode
     ```bash
     docker compose up -d --build
     ```
-4.  The compiled application and necessary files will be available inside the container. To get a installable package or binary, you might need to adjust the `Dockerfile` or copy artifacts out. (***Note:*** *The original instructions mention installing from `./dist` after build - clarify how the user gets the installable artifact from the container or adjust the `Dockerfile` to output it.*)
+4.  After the build completes, binaries will be available in the `./dist` directory. You can run the application from there:
+    ```bash
+    ./dist/bin/knowbridge
+    ```
+
+> To install the application, copy the contents of the `./dist` directory to your desired installation location (e.g., `~/.local/` or `/usr/`).
 
 ---
 
@@ -63,15 +68,6 @@ Knowbridge is a **KDE Plasma 6** tool that lets you leverage Large Language Mode
     **Example (Arch Linux):**
     ```bash
     sudo pacman -S --needed base-devel cmake extra-cmake-modules qt6-base qt6-tools kcoreaddons kglobalaccel ki18n kxmlgui knotifications kconfig kconfigwidgets kwidgetsaddons at-spi2-core atk glib2 git
-    ```
-    **Example (Debian/Ubuntu - *Package names might need adjustment*):**
-    ```bash
-    sudo apt update
-    sudo apt install build-essential cmake extra-cmake-modules pkg-config git \
-         qt6-base-dev qt6-tools-dev \
-         libkf6coreaddons-dev libkf6globalaccel-dev libkf6i18n-dev libkf6xmlgui-dev \
-         libkf6notifications-dev libkf6config-dev libkf6configwidgets-dev libkf6widgetsaddons-dev \
-         libatk-bridge2.0-dev libatspi2.0-dev libglib2.0-dev
     ```
 
 2.  **Clone the Repository:**
@@ -150,22 +146,19 @@ Knowbridge needs to know how to connect to your LLM API endpoint.
 ## 🚧 Roadmap / TODO
 
 *   [ ] Improve AT-SPI compatibility, especially under Wayland and with GTK applications.
+*   [ ] Advanced context integration (e.g., using `at-spi2` to get context of the all visble text in window.  
 *   [ ] Enhance User Experience (e.g., clearer progress indication during API calls, more informative error messages).
-*   [ ] Add advanced features to custom actions (e.g., placeholders beyond `{selected_text}`, import/export actions).
-*   [ ] Investigate potential sandboxing/security implications (e.g., Flatpak).
+*   [ ] Add advanced features to custom actions (e.g., placeholders beyond `{selected_text}`, import/export actions, custom action model provider / system prompt and etc).
+*   [ ] Add structured output support.
 *   [ ] Improve code quality, add unit/integration tests.
 *   [ ] Explore packaging options (AUR, Flathub, distribution repositories).
-*   [ ] Add option for streaming responses.
+
 
 ---
 
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit Issues and Pull Requests. If you plan to add a major feature, please open an issue first to discuss the approach.
-
-<!-- Optional: Add a link to a CONTRIBUTING.md file if you have one -->
-<!-- See [CONTRIBUTING.md](CONTRIBUTING.md) for more details. -->
-
 ---
 
 ## 📜 License
