@@ -1,14 +1,30 @@
-# Knowbridge ✨
+<h1 align="center">
+  ✨ Knowbridge ✨
 
-**Edit text anywhere with AI!**
+</h1>
+<p align="center"><strong>Edit text anywhere with AI!</strong>
+</p>
+<div align="center">
+  <a href="https://www.gnu.org/licenses/gpl-3.0">
+    <img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3">
+  </a>
+  <a href="https://github.com/OPHoperHPO/knowbridge/actions/workflows/build-in-docker.yml?branch=master">
+    <img src="https://img.shields.io/github/actions/workflow/status/OPHoperHPO/knowbridge/build-in-docker.yml?branch=master" alt="Build Status">
+  </a>
+</div>
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/OPHoperHPO/knowbridge/build-in-docker.yml?branch=master)](https://github.com/OPHoperHPO/knowbridge/actions/workflows/build-in-docker.yml)
+<p align="center">
+  <a href="docs/demo.gif">
+    <img src="docs/demo.gif" alt="Knowbridge Demo - Select text, press shortcut, choose action, text replaced">
+  </a>
+</p>
 
-Knowbridge is a **KDE Plasma 6** tool that lets you leverage Large Language Models (LLMs) to edit text directly within **any application**. Simply select text, press a global keyboard shortcut, choose an action (like "Fix Grammar" or your own custom prompts) from a pop-up menu, and Knowbridge modifies the text in-place or copies the result to your clipboard.
+<p>
+  <strong>Knowbridge</strong> is a <strong>KDE Plasma 6</strong> tool that lets you leverage Large Language Models (LLMs) to edit text directly within <strong>any application</strong>. 
+  Simply select text, press a global keyboard shortcut, choose an action (like "Fix Grammar" or your own custom prompts) from a pop-up menu, and Knowbridge modifies the text in-place or copies the result to your clipboard.
+</p>
 
-[![Knowbridge Demo - Select text, press shortcut, choose action, text replaced](docs/demo.gif)](docs/demo.gif)
-
+<hr>
 ---
 
 ## 🌟 Key Features
