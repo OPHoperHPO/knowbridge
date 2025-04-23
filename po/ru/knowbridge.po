@@ -1,36 +1,36 @@
 # Russian translation for knowbridge.
-# Copyright (C) 2025 THE knowbridge'S COPYRIGHT HOLDER
+# Copyright (C) 2025 Nikita Selin
 # This file is distributed under the same license as the knowbridge package.
-# Automatically generated, fill in translations manually.
+# Nikita Selin <farvard34@gmail.com>, 2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: knowbridge 2.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-24 00:00+0000\n"
-"PO-Revision-Date: 2025-04-24 00:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Russian\n"
+"Report-Msgid-Bugs-To: https://github.com/farvardin/knowbridge/issues\n"
+"POT-Creation-Date: 2025-04-25 10:00+0000\n"
+"PO-Revision-Date: 2025-04-25 10:00+0000\n"
+"Last-Translator: Nikita Selin <farvard34@gmail.com>\n"
+"Language-Team: Russian <kde-russian@lists.kde.org>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: ChatGPT\n"
-
-#: ../src/ActionEditorDialog.cpp:18 ../src/SettingsDialog.cpp:106
-msgid "Name:"
-msgstr "Название:"
-
-#: ../src/ActionEditorDialog.cpp:19
-msgid "Prompt:"
-msgstr "Промпт:" # Or "Запрос:", but "Промпт" is common in AI context
+"X-Generator: Lokalize 23.08.4\n"
 
 #: ../src/ActionEditorDialog.cpp:13
 msgctxt "@title:window"
 msgid "Custom Action"
 msgstr "Пользовательское действие"
+
+#: ../src/ActionEditorDialog.cpp:18 ../src/SettingsDialog.cpp:106
+msgid "Name:"
+msgstr "Название:"
+
+#: ../src/ActionEditorDialog.cpp:19 ../src/SettingsDialog.cpp:64
+msgid "Prompt:"
+msgstr "Промпт:"
 
 #: ../src/ApiClient.cpp:32
 msgid "API key is not set."
@@ -75,9 +75,9 @@ msgstr "Текст был заменён."
 
 #: ../src/BackgroundProcessor.cpp:126
 msgid "Inserted into clipboard."
-msgstr "Вставлено в буфер обмена." # Used as 'why' argument
+msgstr "Вставлено в буфер обмена."
 
-#: ../src/BackgroundProcessor.cpp:133 ../src/SettingsDialog.cpp:147
+#: ../src/BackgroundProcessor.cpp:133 ../src/SettingsDialog.cpp:200
 msgid "Error"
 msgstr "Ошибка"
 
@@ -85,18 +85,45 @@ msgstr "Ошибка"
 msgid "Result copied"
 msgstr "Результат скопирован"
 
+#: ../src/ConfigManager.cpp:24 ../src/ConfigManager.cpp:40
+msgid ""
+"You are an AI text editor. Strictly follow the instructions. Return ONLY the "
+"modified text—no explanations, pre-/post-amble."
+msgstr ""
+"Вы — ИИ-редактор текста. Строго следуйте инструкциям. Возвращайте ТОЛЬКО "
+"изменённый текст — без объяснений, вступлений или заключений."
+
+#: ../src/ConfigManager.cpp:37
+msgid "Fix Grammar"
+msgstr "Исправить грамматику"
+
+#: ../src/ConfigManager.cpp:37
+msgid "Correct typos, punctuation, grammar and capitalization."
+msgstr "Исправьте опечатки, пунктуацию, грамматику и использование заглавных букв."
+
+#: ../src/ConfigManager.cpp:38
+msgid "Improve Style"
+msgstr "Улучшить стиль"
+
+#: ../src/ConfigManager.cpp:38
+msgid "Improve clarity, word choice and readability."
+msgstr "Улучшите ясность, подбор слов и читаемость."
+
+#: ../src/ConfigManager.cpp:39
+msgid "Simplify Text"
+msgstr "Упростить текст"
+
+#: ../src/ConfigManager.cpp:39
+msgid "Rewrite in plain language suitable for a 6-grade student."
+msgstr "Перепишите простым языком, понятным ученику 6 класса."
+
 #: ../src/main.cpp:24 ../assets/knowbridge.desktop.cmake:2 ../assets/knowbridge.notifyrc:3 ../assets/knowbridge.notifyrc:7
 msgid "Knowbridge"
-msgstr "Knowbridge" # Proper name, usually not translated
+msgstr "Knowbridge"
 
 #: ../src/main.cpp:26
 msgid "Modify text with an LLM via a global shortcut."
 msgstr "Изменяйте текст с помощью LLM через глобальную комбинацию клавиш."
-
-#: ../src/main.cpp:34 ../src/SettingsDialog.cpp:17
-msgctxt "@title:window"
-msgid "Settings"
-msgstr "Настройки"
 
 #: ../src/main.cpp:34
 msgid "Settings…"
@@ -109,6 +136,11 @@ msgstr "Выход"
 #: ../src/main.cpp:47
 msgid "Modify Text (AI)"
 msgstr "Изменить текст (ИИ)"
+
+#: ../src/SettingsDialog.cpp:17
+msgctxt "@title:window"
+msgid "Settings"
+msgstr "Настройки"
 
 #: ../src/SettingsDialog.cpp:47 ../src/SettingsDialog.cpp:197
 msgid "Test…"
@@ -126,13 +158,17 @@ msgstr "Адрес API:"
 msgid "Model:"
 msgstr "Модель:"
 
-#: ../src/SettingsDialog.cpp:64
+#: ../src/SettingsDialog.cpp:61
+msgid "Enable notifications"
+msgstr "Включить уведомления"
+
+#: ../src/SettingsDialog.cpp:65
 msgid "System prompt:"
-msgstr "Системный промпт:" # Or "Системный запрос:"
+msgstr "Системный промпт:"
 
 #: ../src/SettingsDialog.cpp:68
 msgid "General"
-msgstr "Общие" # Tab title
+msgstr "Общие"
 
 #: ../src/SettingsDialog.cpp:77 ../src/SettingsDialog.cpp:151
 msgid "Add…"
@@ -156,7 +192,7 @@ msgstr "Вниз"
 
 #: ../src/SettingsDialog.cpp:101
 msgid "Actions"
-msgstr "Действия" # Tab title
+msgstr "Действия"
 
 #: ../src/SettingsDialog.cpp:118
 msgid "Endpoint looks invalid."
@@ -164,25 +200,25 @@ msgstr "Адрес API выглядит неверным."
 
 #: ../src/SettingsDialog.cpp:200
 msgid "Missing key"
-msgstr "Отсутствует ключ" # MessageBox title
+msgstr "Отсутствует ключ"
 
 #: ../src/SettingsDialog.cpp:201
 msgid "Enter an API key first."
-msgstr "Сначала введите ключ API." # MessageBox text
+msgstr "Сначала введите ключ API."
 
 #: ../src/SettingsDialog.cpp:209 ../src/SettingsDialog.cpp:214
 msgid "Test result"
-msgstr "Результат проверки" # MessageBox title
+msgstr "Результат проверки"
 
 #: ../src/SettingsDialog.cpp:210
 #, qt-format
 msgid "API key is valid. Result:\n%1"
-msgstr "Ключ API действителен. Результат:\n%1" # MessageBox text
+msgstr "Ключ API действителен. Результат:\n%1"
 
 #: ../src/SettingsDialog.cpp:215
 #, qt-format
 msgid "API key is invalid.\n%1"
-msgstr "Ключ API недействителен.\n%1" # MessageBox text
+msgstr "Ключ API недействителен.\n%1"
 
 #: ../assets/knowbridge.desktop.cmake:3
 msgid "Modify selected text using OpenAI via global shortcut"
@@ -190,7 +226,7 @@ msgstr "Изменение выделенного текста с помощью
 
 #: ../assets/knowbridge.desktop.cmake:9
 msgid "text,ai,openai,modify,grammar,style,shortcut"
-msgstr "текст,ии,openai,изменить,грамматика,стиль,сочетание клавиш,горячая клавиша,llm" # Translated keywords
+msgstr "текст,ии,openai,изменить,грамматика,стиль,сочетание клавиш,горячая клавиша,llm"
 
 #: ../assets/knowbridge.notifyrc:4
 msgid "A brief description of the application"
@@ -220,31 +256,3 @@ msgstr "Событие Knowbridge"
 
 #~ msgid "Settings saved."
 #~ msgstr "Настройки сохранены."
-
-#: ../src/ConfigManager.cpp:XX
-msgid "Fix Grammar"
-msgstr "Исправить грамматику"
-
-#: ../src/ConfigManager.cpp:XX
-msgid "Correct typos, punctuation, grammar and capitalization."
-msgstr "Исправьте опечатки, пунктуацию, грамматику и использование заглавных букв."
-
-#: ../src/ConfigManager.cpp:XX
-msgid "Improve Style"
-msgstr "Улучшить стиль"
-
-#: ../src/ConfigManager.cpp:XX
-msgid "Improve clarity, word choice and readability."
-msgstr "Улучшите ясность, подбор слов и читаемость."
-
-#: ../src/ConfigManager.cpp:XX
-msgid "Simplify Text"
-msgstr "Упростить текст"
-
-#: ../src/ConfigManager.cpp:XX
-msgid "Rewrite in plain language suitable for a 6-grade student."
-msgstr "Перепишите простым языком, понятным ученику 6 класса."
-
-#: ../src/ConfigManager.cpp:XX
-msgid "You are an AI text editor. Strictly follow the instructions. Return ONLY the modified text—no explanations, pre-/post-amble."
-msgstr "Вы — ИИ-редактор текста. Строго следуйте инструкциям. Возвращайте ТОЛЬКО изменённый текст — без объяснений, вступлений или заключений."
