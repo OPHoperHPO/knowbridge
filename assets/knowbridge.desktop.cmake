@@ -2,7 +2,7 @@
 Name=Knowbridge
 Comment=Modify selected text using OpenAI via global shortcut
 # Make sure the executable name matches your CMakeLists.txt target
-Exec=@CMAKE_INSTALL_PREFIX@/@KF6_INSTALL_BINDIR@/knowbridge
+Exec=@CMAKE_INSTALL_PREFIX@/@KDE_INSTALL_BINDIR@/knowbridge
 Icon=accessories-text-editor # Replace with your actual icon name if you provide one
 Type=Application
 Terminal=false

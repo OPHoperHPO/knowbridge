@@ -178,7 +178,7 @@ install(TARGETS knowbridge ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 configure_file(assets/knowbridge.desktop.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/knowbridge.desktop @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/knowbridge.desktop
-        DESTINATION ${KDE_INSTALL_DESKTOPDIR})
+        DESTINATION ${KDE_INSTALL_APPDIR})
 
 if(DEFINED KDE_INSTALL_KNOTIFYRCDIR)
     message(STATUS "Installing notifyrc to ${KDE_INSTALL_KNOTIFYRCDIR}")
