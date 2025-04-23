@@ -159,6 +159,7 @@ Knowbridge needs to know how to connect to your LLM API endpoint.
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit Issues and Pull Requests. If you plan to add a major feature, please open an issue first to discuss the approach.
+
 ---
 
 ## 📜 License
