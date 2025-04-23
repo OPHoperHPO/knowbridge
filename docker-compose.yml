@@ -1,0 +1,9 @@
+version: '3.9'
+
+services:
+  knowbridge:
+    # Build the image using the Dockerfile in the current directory
+    build: .
+    volumes:
+      - ./dist:/dist
+    command: cp -r /app/install/* /dist/ && chown -R 1000:1000 /dist
