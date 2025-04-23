@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '30 10 * * 5'
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 jobs:
 
