@@ -1,0 +1,26 @@
+name: Docker Image CI
+
+on:
+  schedule:
+    - cron: '30 10 * * 5'
+  push:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: |
+        docker-compose build
+        docker-compose up && tar cvf artifact.tar.gz dist/
+    - name: Save build result at artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: artifact.tar.gz
+        path: |
+          artifact.tar.gz
