@@ -49,12 +49,12 @@
 
 ---
 
-### Method 1: Build using Docker (Recommended for Testing/Isolation)
+### Method 1: Build using Docker (Recommended way)
 
 1.  Ensure you have `docker` and `docker-compose` installed.
 2.  Clone the repository:
     ```bash
-    git clone https://your-repo-url/knowbridge.git # Replace with your actual repo URL
+    git clone https://github.com/OPHoperHPO/knowbridge.git # Replace with your actual repo URL
     cd knowbridge
     ```
 3.  Build and run the container detached:
@@ -68,6 +68,7 @@
 
 > To install the application, copy the contents of the `./dist` directory to your desired installation location (e.g., `~/.local/` or `/usr/`).
 
+> If you got libraries errors, you need to install the required runtime libraries on your system. 
 ---
 
 ### Method 2: Build from Source
