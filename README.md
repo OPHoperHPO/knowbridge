@@ -1,113 +1,174 @@
-# Knowbridge
+# Knowbridge ✨
 
-Knowbridge is a KDE Plasma tool that uses LLMs to edit text directly inside any application. Select text, use a shortcut, and it modifies the text in place using AI.
+**Edit text anywhere with AI!**
 
-![](docs/demo.gif)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/OPHoperHPO/knowbridge/build-in-docker.yml?branch=master)](https://github.com/OPHoperHPO/knowbridge/actions/workflows/build-in-docker.yml)
 
-## ✨ Key Features
+Knowbridge is a **KDE Plasma 6** tool that lets you leverage Large Language Models (LLMs) to edit text directly within **any application**. Simply select text, press a global keyboard shortcut, choose an action (like "Fix Grammar" or your own custom prompts) from a pop-up menu, and Knowbridge modifies the text in-place or copies the result to your clipboard.
 
-*   **Global Activation:** Triggered by a configurable global key combination from any application.
-*   **Contextual Text Retrieval:** Uses AT-SPI to get selected text (or all text) from the active application window.
-*   **In-Place Text Replacement:** Utilizes the AT-SPI (`EditableText` interface) to directly replace the original text with the LLM's output in compatible applications.
-*   **Actions Menu:** Displays a context menu near the mouse cursor with predefined actions (Fix Grammar, Improve Style, Make Formal, etc.).
-*   **Support for OpenAI API:** Sends requests to any OpenAI-compatible API endpoint (defaults to `http://localhost:30000/v1/chat/completions`, great for local LLMs like Ollama, llama.cpp).
-*   **Clipboard Fallback:** If AT-SPI is unavailable or the application doesn't support editing via AT-SPI, the utility retrieves text from the selection clipboard (or primary clipboard) and copies the result back to the clipboard.
-*   **Notifications:** Uses KDE system notifications (`KNotification`) to inform about status (processing, success, error, copied to clipboard).
-*   **KDE Integration:** Built with Qt 6 and KDE Frameworks 6, integrates seamlessly with the Plasma desktop. Shortcut configuration is available via "System Settings" -> "Shortcuts".
-*   **System Tray Icon:** Displays an icon for indication of running status and (in the future) quick access to settings/quitting.
+[![Knowbridge Demo - Select text, press shortcut, choose action, text replaced](docs/demo.gif)](docs/demo.gif)
+*(Click GIF to view demo)*
 
-## ⚙️ How It Works
+---
 
-1.  The user presses the global key combination (default is `Ctrl+Alt+Space`).
-2.  The `BackgroundProcessor` intercepts the signal.
-3.  The `AccessibilityHelper` attempts to identify the active window and the focused text element using AT-SPI.
-    *   **If successful and the element is editable:** Retrieves the selected text (or all text if nothing is selected). Stores element information (`ElementInfo`), including a pointer to the `AtspiAccessible`.
-    *   **If AT-SPI fails or the element is not editable:** Tries to get text from the selection clipboard (`QClipboard::Selection`), then the primary clipboard (`QClipboard::Clipboard`).
-4.  If text is found (either via AT-SPI or clipboard), a `QMenu` with the list of available actions (`TextAction`) appears at the mouse cursor.
-5.  The user selects an action.
-6.  The `BackgroundProcessor` calls the `ApiClient` to send the text and the selected prompt to the configured LLM API endpoint.
-7.  The `ApiClient` sends a POST request and waits asynchronously for the response.
-8.  Upon receiving the LLM response:
-    *   **If the original text was obtained via AT-SPI and the element was editable:** The `AccessibilityHelper` attempts to use the `AtspiEditableText` interface to delete the original text and insert the new text into the application.
-    *   **If AT-SPI replacement failed or was not possible (e.g., clipboard was used):** The `BackgroundProcessor` copies the result to the primary clipboard (`QClipboard::Clipboard`).
-9.  The user is shown a notification regarding the status (in-place replacement success, copied to clipboard, or error).
+## 🌟 Key Features
 
-## 🚀 Requirements
+*   **🌐 Global Shortcut:** Trigger Knowbridge from any application using a configurable key combination.
+*   **✍️ In-Place Editing:** Uses Accessibility Technology (AT-SPI) to retrieve selected text and replace it directly in most compatible applications.
+*   **🖱️ Action Menu:** A convenient pop-up menu appears near your cursor, listing predefined and **customizable actions (prompts)**.
+*   **⚙️ GUI Configuration:** Easily configure API endpoint, model name, API key, system prompt, and manage custom actions through a user-friendly settings dialog.
+*   **🔌 Flexible AI Backend:** Designed to work with any OpenAI-compatible API. Use commercial services or local LLMs via tools like Ollama, llama.cpp, Jan, LM Studio, etc.
+*   **📋 Clipboard Fallback:** Automatically copies the AI-generated result to your clipboard if in-place editing fails or isn't supported by the current application.
+*   **💙 KDE Plasma Integration:** Built natively with Qt 6 and KDE Frameworks 6. Includes a system tray icon and allows shortcut configuration via KDE System Settings.
+*   **🔔 Notifications:** Provides feedback on processing status (running, success, copied, error).
 
-### For Running:
+---
 
-*   **Operating System:** Linux with KDE Plasma 6 desktop.
-*   **Environment:** A running AT-SPI service (`at-spi2-core`, usually enabled by default in modern distributions).
-*   **API Endpoint:** An accessible OpenAI-compatible API endpoint (e.g., a locally running Ollama instance with `ollama serve`, or another server).
-*   **API Key:** The environment variable `OPENAI_API_KEY` must be set (even if your local LLM doesn't require a key, the API client expects this variable; you can set it to any non-empty value, e.g., `export OPENAI_API_KEY=dummy`).
+## 🚀 Installation
 
-> Note: It can work with Xorg/Wayland. However, support for Wayland is limited and requires refinement.
+### Prerequisites
 
-### For Building:
+*   **Operating System:** Linux distribution running KDE Plasma 6.
+*   **Accessibility:** A running AT-SPI D-Bus service (`at-spi2-core`). This is usually enabled by default on modern Linux desktops.
+*   **API Access:** An accessible OpenAI-compatible API endpoint URL (e.g., `http://localhost:11434/v1` for Ollama) and, if required by the endpoint, an API key.
 
-*   **CMake:** Version 3.20 or higher.
-*   **Compiler:** C++17 compliant (GCC or Clang).
-*   **Qt 6:** Core libraries and development tools (version 6.6.0 or higher).
-    *   `qt6-base`, `qt6-tools` (or equivalents in your distribution).
-*   **KDE Frameworks 6:** Libraries and development tools (version 6.0.0 or higher).
-    *   `extra-cmake-modules`
-    *   `kcoreaddons-devel`, `kglobalaccel-devel`, `ki18n-devel`, `kxmlgui-devel`, `knotifications-devel` (package names may vary, look for `-devel` or `-dev` suffixes).
-*   **AT-SPI Dependencies:** Libraries and header files for AT-SPI and its dependencies.
-    *   `at-spi2-core-devel` (or `libatk-bridge2.0-dev`)
-    *   `atk-devel` (or `libatk1.0-dev`)
-    *   `glib2-devel` (or `libglib2.0-dev`)
-    *   `gobject-introspection-devel` (might be needed for pkg-config)
-*   **pkg-config:** Utility to find libraries.
+---
 
-## 🔧 Installation and Building
-`Dockerfile` and `docker-compose.yml` are provided for building in an isolated Manjaro environment. The result is copied to the `dist` folder. **Remember to apply all file name and code changes before building in Docker.**
-```bash
-# Ensure project files are updated to 'Knowbridge' / 'knowbridge'
-docker compose build
-docker compose run --rm kde-llm-enhancer # Builds and copies artifacts to ./dist
-# Then you can install from ./dist
-```
+### Method 1: Build using Docker (Recommended for Testing/Isolation)
+
+1.  Ensure you have `docker` and `docker-compose` installed.
+2.  Clone the repository:
+    ```bash
+    git clone https://your-repo-url/knowbridge.git # Replace with your actual repo URL
+    cd knowbridge
+    ```
+3.  Build and run the container detached:
+    ```bash
+    docker compose up -d --build
+    ```
+4.  The compiled application and necessary files will be available inside the container. To get a installable package or binary, you might need to adjust the `Dockerfile` or copy artifacts out. (***Note:*** *The original instructions mention installing from `./dist` after build - clarify how the user gets the installable artifact from the container or adjust the `Dockerfile` to output it.*)
+
+---
+
+### Method 2: Build from Source
+
+1.  **Install Build Dependencies:**
+    *   **Core Build Tools:** `cmake` (>= 3.16), C++17 compliant compiler (like `gcc` or `clang`), `pkg-config`, `git`
+    *   **Qt 6:** `qt6-base`, `qt6-tools` (Development packages, version >= 6.6)
+    *   **KDE Frameworks 6:** `extra-cmake-modules`, `kcoreaddons`, `kglobalaccel`, `ki18n`, `kxmlgui`, `knotifications`, `kconfig`, `kconfigwidgets`, `kwidgetsaddons` (Development packages, version >= 6.0)
+    *   **Accessibility:** `at-spi2-core`, `atk`, `glib2` (Development packages)
+
+    *Package names vary by distribution. You typically need the `-devel` (Fedora/openSUSE) or `-dev` (Debian/Ubuntu) versions.*
+
+    **Example (Arch Linux):**
+    ```bash
+    sudo pacman -S --needed base-devel cmake extra-cmake-modules qt6-base qt6-tools kcoreaddons kglobalaccel ki18n kxmlgui knotifications kconfig kconfigwidgets kwidgetsaddons at-spi2-core atk glib2 git
+    ```
+    **Example (Debian/Ubuntu - *Package names might need adjustment*):**
+    ```bash
+    sudo apt update
+    sudo apt install build-essential cmake extra-cmake-modules pkg-config git \
+         qt6-base-dev qt6-tools-dev \
+         libkf6coreaddons-dev libkf6globalaccel-dev libkf6i18n-dev libkf6xmlgui-dev \
+         libkf6notifications-dev libkf6config-dev libkf6configwidgets-dev libkf6widgetsaddons-dev \
+         libatk-bridge2.0-dev libatspi2.0-dev libglib2.0-dev
+    ```
+
+2.  **Clone the Repository:**
+    ```bash
+    git clone https://your-repo-url/knowbridge.git # Replace with your actual repo URL
+    cd knowbridge
+    ```
+
+3.  **Configure and Build:**
+    ```bash
+    cmake -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
+    cmake --build build
+    ```
+
+4.  **Install:**
+    ```bash
+    sudo cmake --install build
+    ```
+
+5.  **(Optional) Update System Databases:** After installation, sometimes required for icons, shortcuts, etc., to appear immediately.
+    ```bash
+    kbuildsycoca6 --noincremental
+    update-mime-database /usr/share/mime
+    ```
+
+---
 
 ## ⚙️ Configuration
 
-*   **API Endpoint and Model:** Currently, the URL (`http://localhost:30000/v1/chat/completions`) and model name (`localqwen`) are hardcoded in `src/ApiClient.cpp`. You can modify them there and rebuild the project. Future versions might include GUI or configuration file options.
-*   **API Key:** Set the environment variable `OPENAI_API_KEY`. You can do this globally (e.g., in `~/.profile` or `~/.bashrc`) or when launching the application.
-    ```bash
-    export OPENAI_API_KEY="YOUR_API_KEY_OR_DUMMY_VALUE"
-    # Launch the application (if it doesn't start automatically)
-    # /usr/bin/knowbridge &
-    ```
-    *Note:* The application runs as a background process with no window. Restart your session or ensure the environment variable is available to system services/autostart.
-*   **Global Shortcut:**
-    1.  Open KDE "System Settings".
-    2.  Go to "Shortcuts".
-    3.  Find the application "Knowbridge" or the action "Modify Text (AI)".
-    4.  Assign your desired key combination (default is `Ctrl+Alt+Space`).
+Knowbridge needs to know how to connect to your LLM API endpoint.
 
-## ▶️ Usage
+1.  **Start Knowbridge:** Launch it from your application menu or run `knowbridge` in the terminal. A tray icon should appear.
+2.  **Open Settings:** Right-click the **System Tray Icon** and select "Settings…".
+    *   **General Tab:**
+        *   **API Endpoint URL:** The full URL to your OpenAI-compatible API (e.g., `https://api.openai.com/v1` or `http://localhost:11434/v1`).
+        *   **API Key:** Your API key (if required by the endpoint). Leave blank if not needed.
+        *   **Model:** The name of the model to use (e.g., `gpt-4o`, `llama3`).
+        *   **System Prompt:** (Optional) A default instruction given to the AI for context.
+        *   **Notifications:**  Configure if you don't want to see notifications.
+    *   **Actions Tab:**
+        *   Add, edit, remove, and reorder the custom actions/prompts that appear in the pop-up menu. Each action needs a Name (shown in menu) and a Prompt.
+3.  **Set Global Shortcut:**
+    *   Go to KDE **System Settings** -> **Keyboard** -> **Shortcuts** -> **Knowbridge**.
+    *   Find the **Knowbridge** entry.
+    *   Select the "Modify Text (AI)" action.
+    *   Click the button to assign your preferred shortcut (Default suggested: `Meta+Ctrl+Space` or `Ctrl+Alt+Space`).
 
-1.  Ensure the `knowbridge` application is running (an icon should appear in the system tray) and the `OPENAI_API_KEY` environment variable is set.
-2.  Open the application where you want to modify text (e.g., text editor, browser, terminal).
-3.  Select the text you wish to modify. If nothing is selected, the utility might attempt to use the entire text of the element (if available via AT-SPI).
-4.  Press the assigned global key combination (e.g., `Ctrl+Alt+Space`).
-5.  A menu with action options (Fix Grammar, Improve Style, etc.) will appear near the cursor.
-6.  Choose the desired action.
-7.  A "Processing..." notification will appear.
-8.  Wait for the result:
-    *   **Successful in-place replacement:** The text in the application will be replaced, and a "Success" notification will appear.
-    *   **Copy to clipboard:** A "Result Copied" notification will appear, and you can paste the result (`Ctrl+V`) from the clipboard. This happens if in-place replacement is not possible or fails.
-    *   **Error:** An error notification will appear (e.g., API or network issue).
+---
 
-## 🚧 TODO
+## ▶️ How to Use
 
-This is an early version. Here are some planned features and improvements:
+1.  **Run Knowbridge:** Make sure Knowbridge is running (check for the system tray icon).
+2.  **Select Text:** Highlight the text you want to modify in *any* application.
+3.  **Press Shortcut:** Trigger the global shortcut you configured.
+4.  **Choose Action:** The Knowbridge Action Menu will pop up near your cursor. Click the desired action (e.g., "Fix Grammar", "Summarize", "Translate to French").
+5.  **Wait for Result:** You'll see a notification indicating progress.
+    *   ✅ **Success:** The selected text is automatically replaced with the AI's response.
+    *   📋 **Result Copied:** In-place editing failed (e.g., unsupported application). The AI's response has been copied to your clipboard. Paste it manually (`Ctrl+V`).
+    *   ❌ **Error:** An error occurred (e.g., API connection issue, invalid key). Check the notification details and your settings.
 
-*   **Codebase Refinement:** General improvements to structure and quality.
-*   **Configuration Window:** Add a comprehensive GUI for settings (API endpoint, model, key management).
-*   **Enhanced System Tray Menu:** Add options like accessing settings, viewing logs, or exiting.
-*   **Custom Actions & Prompts:** Allow users to define custom actions with editable LLM prompts.
-*   **Progress Indicator:** Provide visual feedback during processing (e.g., tray icon, notification).
+---
+
+## 📸 Screenshots
+
+**Action Menu Popup:**
+![Action menu showing options like Fix Grammar, Summarize, etc.](./docs/img.png)
+
+**Settings - General Tab:**
+![Settings dialog showing General tab with API Endpoint, Key, Model fields](./docs/settings.png)
+
+**Settings - Actions Tab:**
+![Settings dialog showing Actions tab for managing custom prompts](./docs/actions.png)
+
+---
+
+## 🚧 Roadmap / TODO
+
+*   [ ] Improve AT-SPI compatibility, especially under Wayland and with GTK applications.
+*   [ ] Enhance User Experience (e.g., clearer progress indication during API calls, more informative error messages).
+*   [ ] Add advanced features to custom actions (e.g., placeholders beyond `{selected_text}`, import/export actions).
+*   [ ] Investigate potential sandboxing/security implications (e.g., Flatpak).
+*   [ ] Improve code quality, add unit/integration tests.
+*   [ ] Explore packaging options (AUR, Flathub, distribution repositories).
+*   [ ] Add option for streaming responses.
+
+---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please open Issues for bug reports and feature requests. For code contributions, please open Pull Requests.
+Contributions are welcome! Please feel free to submit Issues and Pull Requests. If you plan to add a major feature, please open an issue first to discuss the approach.
+
+<!-- Optional: Add a link to a CONTRIBUTING.md file if you have one -->
+<!-- See [CONTRIBUTING.md](CONTRIBUTING.md) for more details. -->
+
+---
+
+## 📜 License
+
+This project is licensed under the **GPLv3.0**. See the [LICENSE](LICENSE) file for details.
