@@ -8,7 +8,6 @@
 Knowbridge is a **KDE Plasma 6** tool that lets you leverage Large Language Models (LLMs) to edit text directly within **any application**. Simply select text, press a global keyboard shortcut, choose an action (like "Fix Grammar" or your own custom prompts) from a pop-up menu, and Knowbridge modifies the text in-place or copies the result to your clipboard.
 
 [![Knowbridge Demo - Select text, press shortcut, choose action, text replaced](docs/demo.gif)](docs/demo.gif)
-*(Click GIF to view demo)*
 
 ---
 
