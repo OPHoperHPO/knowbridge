@@ -146,6 +146,14 @@ Knowbridge needs to know how to connect to your LLM API endpoint.
 
 ---
 
+## ⚠️ Known Issues
+
+1.  If text starts duplicating after modifying actions in the settings, you may need to restart the application.
+2.  If you receive an error message that requires authorization, it means your API key is missing or incorrect. Please set a valid API key in the settings.
+
+
+---
+
 ## 📸 Screenshots
 
 **Action Menu Popup:**
@@ -156,6 +164,7 @@ Knowbridge needs to know how to connect to your LLM API endpoint.
 
 **Settings - Actions Tab:**
 ![Settings dialog showing Actions tab for managing custom prompts](./docs/actions.png)
+
 
 ---
 
