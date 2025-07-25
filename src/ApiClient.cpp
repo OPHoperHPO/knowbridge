@@ -32,11 +32,6 @@ QString ApiClient::defaultSystemPrompt()
 
 void ApiClient::processText(const QString& text, const QString& userPrompt)
 {
-    if (m_apiKey.isEmpty()) {
-        Q_EMIT processingError(i18n("API key is not set."));
-        return;
-    }
-
     QString finalPrompt =  userPrompt + QStringLiteral("\n") + QStringLiteral("\n") + text;
 
     QNetworkRequest req(m_apiUrl);
