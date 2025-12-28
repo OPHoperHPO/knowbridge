@@ -35,6 +35,7 @@ private Q_SLOTS:
 private:
     void setupApiClient();
     void createActionMenu();
+    void showActionMenu();   // Wayland-compatible menu display
     void notify(const QString& title,
                 const QString& text,
                 bool error = false);

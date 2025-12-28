@@ -1,11 +1,14 @@
 #include "BackgroundProcessor.h"
 
 #include <QApplication>
+#include <QGuiApplication>
 #include <QAction>
 #include <QCursor>
 #include <QTimer>
 #include <QRegularExpression>
 #include <QStandardPaths>
+#include <QScreen>
+#include <QWindow>
 #include <QDebug>
 
 #ifdef HAVE_KNOTIFICATIONS
@@ -71,8 +74,8 @@ void BackgroundProcessor::createActionMenu()
         auto* act = m_menu->addAction(a.name);
         act->setData(i);
     }
-    connect(m_menu, &QMenu::triggered,
-            this,  &BackgroundProcessor::onActionSelected);
+    // Note: Action selection is handled directly in showActionMenu() via exec()
+    // No signal connection needed here
 }
 
 void BackgroundProcessor::onShortcutActivated()
@@ -95,7 +98,51 @@ void BackgroundProcessor::onShortcutActivated()
                false);
         return;
     }
-    m_menu->popup(QCursor::pos());
+    showActionMenu();
+}
+
+void BackgroundProcessor::showActionMenu()
+{
+    // Get cursor position - may be unreliable on Wayland
+    QPoint pos = QCursor::pos();
+
+    // Wayland often returns (0,0) or invalid position
+    // Check if position seems invalid and use fallback
+    bool positionValid = true;
+    if (pos.isNull() || (pos.x() == 0 && pos.y() == 0)) {
+        positionValid = false;
+    }
+
+    // Also validate position is within any screen bounds
+    if (positionValid) {
+        bool withinScreen = false;
+        const auto screens = QGuiApplication::screens();
+        for (const QScreen* screen : screens) {
+            if (screen->geometry().contains(pos)) {
+                withinScreen = true;
+                break;
+            }
+        }
+        if (!withinScreen && !screens.isEmpty()) {
+            positionValid = false;
+        }
+    }
+
+    // Fallback: use center of primary screen or screen at cursor
+    if (!positionValid) {
+        QScreen* screen = QGuiApplication::primaryScreen();
+        if (screen) {
+            pos = screen->geometry().center();
+            qDebug() << "KnowBridge: Using fallback menu position (Wayland cursor position unavailable)";
+        }
+    }
+
+    // Use exec() instead of popup() for better Wayland compatibility
+    // exec() is modal and handles window positioning more reliably across platforms
+    QAction* selectedAction = m_menu->exec(pos);
+    if (selectedAction) {
+        onActionSelected(selectedAction);
+    }
 }
 
 void BackgroundProcessor::onActionSelected(QAction* act)

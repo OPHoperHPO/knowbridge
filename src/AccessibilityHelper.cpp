@@ -74,16 +74,21 @@ namespace { // Anonymous namespace for static callback
         // standard focus events like `Focus:Object` or `Focus:Window`.
         // For `object:state-changed:focused`, let's verify the state.
         AtspiStateSet* stateSet = atspi_accessible_get_state_set(event->source);
-        // <<< FIX 2: Use g_object_unref for AtspiStateSet
-        if (stateSet) {
-            g_object_unref(stateSet); // Free the state set reference
+        if (!stateSet) {
+            return;
         }
 
-        if (atspi_state_set_contains(stateSet, ATSPI_STATE_FOCUSED)
-            && atspi_state_set_contains(stateSet, ATSPI_STATE_EDITABLE)) {
-            // The source object is now focused.
+        // Check state BEFORE unreferencing
+        bool isFocused = atspi_state_set_contains(stateSet, ATSPI_STATE_FOCUSED);
+        bool isEditable = atspi_state_set_contains(stateSet, ATSPI_STATE_EDITABLE);
+
+        // Now safe to unref the state set
+        g_object_unref(stateSet);
+
+        if (isFocused && isEditable) {
+            // The source object is now focused and editable.
             helper->updateCurrentFocus(event->source);
-        } else if (atspi_state_set_contains(stateSet, ATSPI_STATE_FOCUSED)) {
+        } else if (isFocused) {
             helper->updateCurrentFocus(nullptr); // we don't need other components
         }
 

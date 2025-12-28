@@ -1,8 +1,10 @@
 #include <QApplication>
+#include <QGuiApplication>
 #include <QSystemTrayIcon>
 #include <QMenu>
 #include <QKeySequence>
 #include <QIcon>
+#include <QDebug>
 
 #include <KAboutData>
 #include <KLocalizedString>
@@ -15,7 +17,19 @@
 
 int main(int argc, char* argv[])
 {
+    // Set Qt attributes for Wayland compatibility before creating QApplication
+    // AA_DontCreateNativeWidgetSiblings helps with popup positioning on Wayland
+    QApplication::setAttribute(Qt::AA_DontCreateNativeWidgetSiblings, true);
+
     QApplication app(argc, argv);
+
+    // Log platform information for debugging
+    const QString platform = QGuiApplication::platformName();
+    qDebug() << "KnowBridge: Running on platform:" << platform;
+    if (platform == QStringLiteral("wayland")) {
+        qDebug() << "KnowBridge: Wayland detected - using Wayland-compatible menu positioning";
+    }
+
     KLocalizedString::setApplicationDomain("knowbridge");
     app.setQuitOnLastWindowClosed(false);
     app.setApplicationName(QStringLiteral("knowbridge"));
