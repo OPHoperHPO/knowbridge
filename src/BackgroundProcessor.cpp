@@ -38,6 +38,7 @@ BackgroundProcessor::BackgroundProcessor(ConfigManager* cfg, QObject* parent)
 BackgroundProcessor::~BackgroundProcessor()
 {
     delete m_menu;
+    delete m_menuAnchor;
 }
 
 void BackgroundProcessor::initialize()
@@ -128,7 +129,7 @@ void BackgroundProcessor::showActionMenu()
         }
     }
 
-    // Fallback: use center of primary screen or screen at cursor
+    // Fallback: use center of primary screen
     if (!positionValid) {
         QScreen* screen = QGuiApplication::primaryScreen();
         if (screen) {
@@ -137,11 +138,54 @@ void BackgroundProcessor::showActionMenu()
         }
     }
 
-    // Use exec() instead of popup() for better Wayland compatibility
-    // exec() is modal and handles window positioning more reliably across platforms
-    QAction* selectedAction = m_menu->exec(pos);
-    if (selectedAction) {
-        onActionSelected(selectedAction);
+    // On Wayland, popups require a parent window that has received input.
+    // Create an anchor widget to serve as the transient parent for the menu.
+    const bool isWayland = QGuiApplication::platformName() == QStringLiteral("wayland");
+
+    if (isWayland) {
+        // Create anchor widget if needed - must be a proper window (not bypassing WM)
+        // so Wayland can establish proper parent-child popup relationship
+        if (!m_menuAnchor) {
+            m_menuAnchor = new QWidget(nullptr, Qt::Window | Qt::FramelessWindowHint);
+            m_menuAnchor->setAttribute(Qt::WA_TranslucentBackground);
+            m_menuAnchor->setAttribute(Qt::WA_DeleteOnClose, false);
+            m_menuAnchor->setWindowOpacity(0.01);  // Nearly invisible but still a valid window
+            m_menuAnchor->setFixedSize(1, 1);
+        }
+
+        // Position and show the anchor to receive input
+        m_menuAnchor->move(pos);
+        m_menuAnchor->show();
+        m_menuAnchor->raise();
+        m_menuAnchor->activateWindow();
+
+        // Give the anchor window time to receive input from the compositor
+        QApplication::processEvents();
+        QApplication::processEvents();
+
+        // Set menu's parent for proper Wayland popup chain
+        if (m_menu->parent() != m_menuAnchor) {
+            m_menu->setParent(m_menuAnchor, m_menu->windowFlags() | Qt::Popup);
+        }
+
+        // Show menu - position relative to anchor
+        QAction* selectedAction = m_menu->exec(pos);
+
+        // Hide the anchor after menu closes
+        m_menuAnchor->hide();
+
+        // Reset menu parent to avoid issues
+        m_menu->setParent(nullptr);
+
+        if (selectedAction) {
+            onActionSelected(selectedAction);
+        }
+    } else {
+        // X11 path - direct exec works fine
+        QAction* selectedAction = m_menu->exec(pos);
+        if (selectedAction) {
+            onActionSelected(selectedAction);
+        }
     }
 }
 

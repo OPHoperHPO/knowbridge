@@ -3,6 +3,7 @@
 #include <QString>
 #include <QClipboard>
 #include <QMenu>
+#include <QWidget>
 
 #include "AccessibilityHelper.h"
 #include "ConfigManager.h"
@@ -47,6 +48,7 @@ private:
     ApiClient*          m_api{nullptr};
     QClipboard*         m_clip;
     QMenu*              m_menu;
+    QWidget*            m_menuAnchor{nullptr};  // Anchor widget for Wayland popup
     AccessibilityHelper m_a11y;
     ElementInfo         m_target;
     QString             m_currentPrompt;
