@@ -16,6 +16,27 @@
 #include <QKeyEvent>
 #include <QEventLoop>
 
+// Helper class for Wayland dialog event filtering
+class DialogEventFilter : public QObject {
+public:
+    explicit DialogEventFilter(QWidget* dialog) : QObject(dialog), m_dialog(dialog) {}
+
+protected:
+    bool eventFilter(QObject* obj, QEvent* event) override {
+        if (event->type() == QEvent::KeyPress) {
+            QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
+            if (keyEvent->key() == Qt::Key_Escape) {
+                m_dialog->close();
+                return true;
+            }
+        }
+        return QObject::eventFilter(obj, event);
+    }
+
+private:
+    QWidget* m_dialog;
+};
+
 #ifdef HAVE_KNOTIFICATIONS
 #include <KNotification>
 #include <QSystemTrayIcon>
@@ -75,9 +96,9 @@ void BackgroundProcessor::setupApiClient()
 void BackgroundProcessor::createActionMenu()
 {
     m_menu->clear();
-    for (int i = 0; i < m_cfg->actions().size(); ++i) {
-        const auto& a = m_cfg->actions()[i];
-        auto* act = m_menu->addAction(a.name);
+    const auto actions = m_cfg->actions();  // Store to avoid dangling reference
+    for (int i = 0; i < actions.size(); ++i) {
+        auto* act = m_menu->addAction(actions[i].name);
         act->setData(i);
     }
     // Note: Action selection is handled directly in showActionMenu() via exec()
@@ -224,22 +245,20 @@ void BackgroundProcessor::showWaylandActionDialog(const QPoint& pos)
         dialog->close();
     });
 
-    // Close on Escape or focus loss
-    dialog->installEventFilter(new class : public QObject {
-        bool eventFilter(QObject* obj, QEvent* event) override {
-            if (event->type() == QEvent::KeyPress) {
-                QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
-                if (keyEvent->key() == Qt::Key_Escape) {
-                    static_cast<QWidget*>(obj)->close();
-                    return true;
-                }
-            } else if (event->type() == QEvent::WindowDeactivate) {
-                static_cast<QWidget*>(obj)->close();
-                return true;
-            }
-            return false;
+    // Close on Escape key
+    auto* eventFilter = new DialogEventFilter(dialog);
+    list->installEventFilter(eventFilter);
+    dialog->installEventFilter(eventFilter);
+
+    // Close on focus loss - poll for window deactivation
+    QTimer* deactivateTimer = new QTimer(dialog);
+    deactivateTimer->setInterval(100);
+    QObject::connect(deactivateTimer, &QTimer::timeout, dialog, [dialog]() {
+        if (!dialog->isActiveWindow() && dialog->isVisible()) {
+            dialog->close();
         }
     });
+    deactivateTimer->start();
 
     // Show and focus
     dialog->show();
