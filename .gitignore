@@ -59,3 +59,4 @@ cmake-build-*
 po/*.pot
 po/*/*.mo
 
+build/
