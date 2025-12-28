@@ -4,6 +4,7 @@
 #include <QClipboard>
 #include <QMenu>
 #include <QWidget>
+#include <QPoint>
 
 #include "AccessibilityHelper.h"
 #include "ConfigManager.h"
@@ -36,7 +37,8 @@ private Q_SLOTS:
 private:
     void setupApiClient();
     void createActionMenu();
-    void showActionMenu();   // Wayland-compatible menu display
+    void showActionMenu();
+    void showWaylandActionDialog(const QPoint& pos);  // Wayland-specific dialog menu
     void notify(const QString& title,
                 const QString& text,
                 bool error = false);

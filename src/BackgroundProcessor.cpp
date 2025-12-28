@@ -10,6 +10,11 @@
 #include <QScreen>
 #include <QWindow>
 #include <QDebug>
+#include <QVBoxLayout>
+#include <QListWidget>
+#include <QLabel>
+#include <QKeyEvent>
+#include <QEventLoop>
 
 #ifdef HAVE_KNOTIFICATIONS
 #include <KNotification>
@@ -138,54 +143,123 @@ void BackgroundProcessor::showActionMenu()
         }
     }
 
-    // On Wayland, popups require a parent window that has received input.
-    // Create an anchor widget to serve as the transient parent for the menu.
     const bool isWayland = QGuiApplication::platformName() == QStringLiteral("wayland");
 
     if (isWayland) {
-        // Create anchor widget if needed - must be a proper window (not bypassing WM)
-        // so Wayland can establish proper parent-child popup relationship
-        if (!m_menuAnchor) {
-            m_menuAnchor = new QWidget(nullptr, Qt::Window | Qt::FramelessWindowHint);
-            m_menuAnchor->setAttribute(Qt::WA_TranslucentBackground);
-            m_menuAnchor->setAttribute(Qt::WA_DeleteOnClose, false);
-            m_menuAnchor->setWindowOpacity(0.01);  // Nearly invisible but still a valid window
-            m_menuAnchor->setFixedSize(1, 1);
-        }
-
-        // Position and show the anchor to receive input
-        m_menuAnchor->move(pos);
-        m_menuAnchor->show();
-        m_menuAnchor->raise();
-        m_menuAnchor->activateWindow();
-
-        // Give the anchor window time to receive input from the compositor
-        QApplication::processEvents();
-        QApplication::processEvents();
-
-        // Set menu's parent for proper Wayland popup chain
-        if (m_menu->parent() != m_menuAnchor) {
-            m_menu->setParent(m_menuAnchor, m_menu->windowFlags() | Qt::Popup);
-        }
-
-        // Show menu - position relative to anchor
-        QAction* selectedAction = m_menu->exec(pos);
-
-        // Hide the anchor after menu closes
-        m_menuAnchor->hide();
-
-        // Reset menu parent to avoid issues
-        m_menu->setParent(nullptr);
-
-        if (selectedAction) {
-            onActionSelected(selectedAction);
-        }
+        // On Wayland, popups require a parent window that has received input.
+        // QMenu popup doesn't work with global shortcuts, so use a dialog-style window instead.
+        showWaylandActionDialog(pos);
     } else {
         // X11 path - direct exec works fine
         QAction* selectedAction = m_menu->exec(pos);
         if (selectedAction) {
             onActionSelected(selectedAction);
         }
+    }
+}
+
+void BackgroundProcessor::showWaylandActionDialog(const QPoint& pos)
+{
+    // Create a tool window styled as a menu - bypasses Wayland popup restrictions
+    QWidget* dialog = new QWidget(nullptr, Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->setWindowTitle(QStringLiteral("KnowBridge"));
+
+    QVBoxLayout* layout = new QVBoxLayout(dialog);
+    layout->setContentsMargins(2, 2, 2, 2);
+    layout->setSpacing(0);
+
+    QListWidget* list = new QListWidget(dialog);
+    list->setFrameShape(QFrame::NoFrame);
+    list->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    list->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    list->setSelectionMode(QAbstractItemView::SingleSelection);
+    list->setFocusPolicy(Qt::StrongFocus);
+
+    // Style to look like a menu
+    list->setStyleSheet(QStringLiteral(
+        "QListWidget { background: palette(window); border: 1px solid palette(mid); }"
+        "QListWidget::item { padding: 6px 12px; }"
+        "QListWidget::item:hover { background: palette(highlight); color: palette(highlighted-text); }"
+        "QListWidget::item:selected { background: palette(highlight); color: palette(highlighted-text); }"
+    ));
+
+    // Populate with actions
+    const auto& actions = m_cfg->actions();
+    for (int i = 0; i < actions.size(); ++i) {
+        QListWidgetItem* item = new QListWidgetItem(actions[i].name);
+        item->setData(Qt::UserRole, i);
+        list->addItem(item);
+    }
+
+    layout->addWidget(list);
+
+    // Size to content
+    int itemHeight = list->sizeHintForRow(0);
+    if (itemHeight <= 0) itemHeight = 30;
+    int totalHeight = itemHeight * qMin(actions.size(), 10) + 4;  // Max 10 visible items
+    int width = 200;
+    for (int i = 0; i < list->count(); ++i) {
+        width = qMax(width, list->sizeHintForColumn(0) + 40);
+    }
+    dialog->setFixedSize(qMin(width, 400), totalHeight);
+
+    // Position the dialog
+    QPoint dialogPos = pos;
+    dialogPos.rx() -= dialog->width() / 2;  // Center horizontally
+    dialog->move(dialogPos);
+
+    // Track selected action
+    int selectedIndex = -1;
+
+    // Handle selection
+    QObject::connect(list, &QListWidget::itemClicked, dialog, [&selectedIndex, dialog](QListWidgetItem* item) {
+        selectedIndex = item->data(Qt::UserRole).toInt();
+        dialog->close();
+    });
+
+    // Handle Enter key
+    QObject::connect(list, &QListWidget::itemActivated, dialog, [&selectedIndex, dialog](QListWidgetItem* item) {
+        selectedIndex = item->data(Qt::UserRole).toInt();
+        dialog->close();
+    });
+
+    // Close on Escape or focus loss
+    dialog->installEventFilter(new class : public QObject {
+        bool eventFilter(QObject* obj, QEvent* event) override {
+            if (event->type() == QEvent::KeyPress) {
+                QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
+                if (keyEvent->key() == Qt::Key_Escape) {
+                    static_cast<QWidget*>(obj)->close();
+                    return true;
+                }
+            } else if (event->type() == QEvent::WindowDeactivate) {
+                static_cast<QWidget*>(obj)->close();
+                return true;
+            }
+            return false;
+        }
+    });
+
+    // Show and focus
+    dialog->show();
+    dialog->raise();
+    dialog->activateWindow();
+    list->setFocus();
+    if (list->count() > 0) {
+        list->setCurrentRow(0);
+    }
+
+    // Block until closed (modal behavior)
+    QEventLoop loop;
+    QObject::connect(dialog, &QWidget::destroyed, &loop, &QEventLoop::quit);
+    loop.exec();
+
+    // Process selection
+    if (selectedIndex >= 0 && selectedIndex < actions.size()) {
+        m_currentPrompt = actions[selectedIndex].prompt;
+        QApplication::setOverrideCursor(Qt::BusyCursor);
+        m_api->processText(m_target.text, m_currentPrompt);
     }
 }
 
